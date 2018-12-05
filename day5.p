@@ -29,26 +29,19 @@ How many units remain after fully reacting the polymer you scanned? (Note: in th
 DEFINE VARIABLE c             AS CHARACTER   NO-UNDO.
 DEFINE VARIABLE i             AS INTEGER     NO-UNDO.
 DEFINE VARIABLE iLength       AS INTEGER     INITIAL ? NO-UNDO.
-DEFINE VARIABLE lcPolymer     AS LONGCHAR    NO-UNDO.
+DEFINE VARIABLE lcPolymer     AS LONGCHAR  CASE-SENSITIVE  NO-UNDO.
 
 FUNCTION react RETURNS LOGICAL:
-    DEFINE VARIABLE c1     AS CHARACTER   NO-UNDO.
-    DEFINE VARIABLE c2     AS CHARACTER   NO-UNDO.
-    DEFINE VARIABLE i      AS INTEGER     NO-UNDO.
-    DEFINE VARIABLE lReact AS LOGICAL     NO-UNDO.
+    DEFINE VARIABLE i       AS INTEGER   NO-UNDO.
+    DEFINE VARIABLE iLength AS INTEGER   NO-UNDO.
 
-    DO i = LENGTH(lcPolymer) - 1 TO 1 BY -1:
-        ASSIGN
-            c1 = SUBSTRING(lcPolymer, i, 1)
-            c2 = SUBSTRING(lcPolymer, i + 1, 1).
-        IF ABSOLUTE(ASC(c1) - ASC(c2)) = 32 THEN DO:
-            SUBSTRING(lcPolymer,i,2) = "".
-            lReact = YES.
-            i = i - 1.
-        END.
+    iLength = LENGTH(lcPolymer).
+    DO i = 1 TO 26:
+        lcPolymer = REPLACE(
+                    REPLACE(lcPolymer, CHR(96 + i) + CHR(64 + i), ""), 
+                                       CHR(64 + i) + CHR(96 + i), "").
     END.
-
-    RETURN lReact.
+    RETURN iLength <> LENGTH(lcPolymer).
 END FUNCTION.
 
 ETIME(YES).
@@ -62,6 +55,5 @@ MESSAGE ETIME SKIP
     LENGTH(lcPolymer)
     VIEW-AS ALERT-BOX INFO BUTTONS OK.
 
-/* 42580 */
+/* 1238 */
 /* 10804 */
-

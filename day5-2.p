@@ -22,31 +22,24 @@ What is the length of the shortest polymer you can produce by removing all units
 DEFINE VARIABLE c             AS CHARACTER   NO-UNDO.
 DEFINE VARIABLE i             AS INTEGER     NO-UNDO.
 DEFINE VARIABLE iLength       AS INTEGER     INITIAL ? NO-UNDO.
-DEFINE VARIABLE lcPolymer     AS LONGCHAR    NO-UNDO.
-DEFINE VARIABLE lcPolymerTest AS LONGCHAR    NO-UNDO.
+DEFINE VARIABLE lcPolymer     AS LONGCHAR    CASE-SENSITIVE NO-UNDO.
+DEFINE VARIABLE lcPolymerTest AS LONGCHAR    CASE-SENSITIVE NO-UNDO.
 
 DEFINE TEMP-TABLE ttUnit NO-UNDO LABEL ""
  FIELD c AS CHARACTER
  INDEX ix IS PRIMARY UNIQUE c.
 
 FUNCTION react RETURNS LOGICAL:
-    DEFINE VARIABLE c1     AS CHARACTER   NO-UNDO.
-    DEFINE VARIABLE c2     AS CHARACTER   NO-UNDO.
-    DEFINE VARIABLE i      AS INTEGER     NO-UNDO.
-    DEFINE VARIABLE lReact AS LOGICAL     NO-UNDO.
+    DEFINE VARIABLE i       AS INTEGER   NO-UNDO.
+    DEFINE VARIABLE iLength AS INTEGER   NO-UNDO.
 
-    DO i = LENGTH(lcPolymerTest) - 1 TO 1 BY -1:
-        ASSIGN
-            c1 = SUBSTRING(lcPolymerTest, i, 1)
-            c2 = SUBSTRING(lcPolymerTest, i + 1, 1).
-        IF ABSOLUTE(ASC(c1) - ASC(c2)) = 32 THEN DO:
-            SUBSTRING(lcPolymerTest,i,2) = "".
-            lReact = YES.
-            i = i - 1.
-        END.
+    iLength = LENGTH(lcPolymerTest).
+    DO i = 1 TO 26:
+        lcPolymerTest = REPLACE(
+                        REPLACE(lcPolymerTest, CHR(96 + i) + CHR(64 + i), ""), 
+                                               CHR(64 + i) + CHR(96 + i), "").
     END.
-
-    RETURN lReact.
+    RETURN iLength <> LENGTH(lcPolymerTest).
 END FUNCTION.
 
 ETIME(YES).
@@ -62,7 +55,8 @@ DO i = LENGTH(lcPolymer) TO 1 BY -1:
 END.
 
 FOR EACH ttUnit:
-    lcPolymerTest = REPLACE(lcPolymer, ttUnit.c, "").
+    lcPolymerTest = REPLACE(lcPolymer, LOWER(ttUnit.c), "").
+    lcPolymerTest = REPLACE(lcPolymerTest, UPPER(ttUnit.c), "").
     DO WHILE react():
     END.
     iLength = IF iLength = ? THEN LENGTH(lcPolymerTest) ELSE MINIMUM(iLength, LENGTH(lcPolymerTest)).
@@ -72,6 +66,6 @@ MESSAGE ETIME SKIP
     iLength
     VIEW-AS ALERT-BOX INFO BUTTONS OK.
 
-/* 1285093 */
+/* 32617 */
 /* 6650 */
-    
+
