@@ -69,7 +69,7 @@ In this example, after 20 generations, the pots shown as # contain plants, the f
 After 20 generations, what is the sum of the numbers of all pots which contain a plant?
 
 */
-&GLOBAL-DEFINE xiIterations 500
+&GLOBAL-DEFINE xiIterations 20
 
 DEFINE VARIABLE c         AS CHARACTER   NO-UNDO.
 DEFINE VARIABLE cDummy    AS CHARACTER   NO-UNDO.
@@ -106,8 +106,6 @@ DELETE ttNote.
 
 INPUT CLOSE.
 
-OUTPUT TO c:/temp/states.txt.
-PUT UNFORMATTED 0 ": " iFirstPot " " cState SKIP.
 DO i = 1 TO {&xiIterations}:
     /* ensure cState begins and ends in "...." */
     IF cState BEGINS "#" THEN ASSIGN cState = "...." + cState iFirstPot = iFirstPot - 4.
@@ -132,18 +130,8 @@ DO i = 1 TO {&xiIterations}:
             cNewState = cNewState + ttNote.cTo.
     END.
 
-    /* remove unnecessary "." at the start */
-    DO WHILE TRUE:
-        c = SUBSTRING(cNewState,1,4).
-        IF c <> "...." THEN LEAVE.
-        cNewState = SUBSTRING(cNewState, 2).
-        iFirstPot = iFirstPot + 1.
-    END.
-
     cState = cNewState.
-    PUT UNFORMATTED i ": " iFirstPot " " cState SKIP.
 END.
-OUTPUT CLOSE.
 
 DO i = 0 TO LENGTH(cState) - 1:
     IF SUBSTRING(cState,i + 1,1) = "#" THEN
@@ -160,18 +148,3 @@ MESSAGE ETIME SKIP
 /* -5 */
 /* 2909 */
 
-/* 50.000.000.000 generations */
-/* starting with iteration 100, all the lines are equal, with a shift of 1 to the right at each iteration */
-/* 100: 47  ...#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#. */
-/* 500: 447 ...#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#..#. */
-/* --> for iteration 50.000.000.000 the first pot will be 50b-53 */
-iFirstPot = 50000000000 - 53.
-iSum = 0.
-DO i = 0 TO LENGTH(cState) - 1:
-    IF SUBSTRING(cState,i + 1,1) = "#" THEN
-        iSum = iSum + i + iFirstPot.
-END.
-MESSAGE iSum
-    VIEW-AS ALERT-BOX INFO BUTTONS OK.
-
-/* 2500000001175 */
