@@ -28,7 +28,7 @@ a b c pc e  f <- 0 0 0 0 0 0
 22 mulr 4 3 4			e = e * pc				e = 2 * 22
 23 addi 4 2 4			e = e + 2				e = 2 * 22 + 2 = 46
 24 addr 2 4 2			c = c + e				c = 836 + 46 = 882
-25 addr 3 0 3			pc = pc + a				if a = 1 then goto L2
+25 addr 3 0 3			pc = pc + a				if a = 1 then goto L2 /* a=1: init for part 2*/
 26 seti 0 8 3			pc = 0					 else goto L3
 27 setr 3 8 4		L2:	e = pc					e = 27
 28 mulr 4 3 4			e = e * pc				e = 27 * 28

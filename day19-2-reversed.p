@@ -20,10 +20,12 @@ ETIME(YES).
 ASSIGN
     a = 0
     b = 1
+    /* the two following values gotten from day19-reversed.txt */
     e = 10550400 /* ( 27 * 28 + 29 ) * 30 * 14 * 32 */
     c = 10551282 /* i1 + (2 * 2 * 19 * 11) + (2 * 22 + 2) */
     .
 
+/* this algorithm also from day19-reversed.txt */
 DO WHILE TRUE:
     iCount = iCount + 1.
     IF c MODULO b = 0 THEN
@@ -31,13 +33,13 @@ DO WHILE TRUE:
     b = b + 1.
     IF b > c THEN
         LEAVE.
-    IF iCount MODULO 10000 = 0 THEN DISP a b c ETIME.
+    /* IF iCount MODULO 10000 = 0 THEN DISP a b c ETIME. */
 END.
 
 MESSAGE ETIME SKIP
     a
     VIEW-AS ALERT-BOX INFO BUTTONS OK.
 
-/* 18538 */
+/* 13481 */
 /* 24117312 */
 
