@@ -1,0 +1,41 @@
+#ip 3
+
+0 1 2 3  4  5
+a b c pc e  f <- 0 0 0 0 0 0
+
+ 0 addi 3 16 3			pc = pc + 16			goto L1
+ 1 seti 1 7 1		L3:	b = 1					b = 1
+ 2 seti 1 7 5		L9:	f = 1					f = 1
+ 3 mulr 1 5 4		L7:	e = b * f				e = b * f
+ 4 eqrr 4 2 4			e = e == c				if b * f == c
+ 5 addr 4 3 3			pc = pc + e				 then goto L4
+ 6 addi 3 1 3			pc = pc + 1				 else goto L5
+ 7 addr 1 0 0		L4:	a = b + a				a = a + b
+ 8 addi 5 1 5		L5:	f = f + 1				f = f + 1
+ 9 gtrr 5 2 4			e = f > c				if f > c
+10 addr 3 4 3			pc = pc + e				 then goto L6
+11 seti 2 2 3			pc = 2					 else goto L7
+12 addi 1 1 1		L6:	b = b + 1				b = b + 1
+13 gtrr 1 2 4			e = b > c				if b > c
+14 addr 4 3 3			pc = pc + c				 then goto L8
+15 seti 1 5 3			pc = 1					 then goto L9
+16 mulr 3 3 3		L8:	pc = pc * pc			THE END (out of program)
+17 addi 2 2 2		L1:	c = 2					c = 2
+18 mulr 2 2 2			c = c * c				c = 2 * 2
+19 mulr 3 2 2			c = pc * c				c = 4 * 19
+20 muli 2 11 2			c = c * 11				c = 4 * 19 * 11 = 836
+21 addi 4 2 4			e = 2					e = 2
+22 mulr 4 3 4			e = e * pc				e = 2 * 22
+23 addi 4 2 4			e = e + 2				e = 2 * 22 + 2 = 46
+24 addr 2 4 2			c = c + e				c = 836 + 46 = 882
+25 addr 3 0 3			pc = pc + a				if a = 1 then goto L2
+26 seti 0 8 3			pc = 0					 else goto L3
+27 setr 3 8 4		L2:	e = pc					e = 27
+28 mulr 4 3 4			e = e * pc				e = 27 * 28
+29 addr 3 4 4			e = e + pc				e = 27 * 28 + 29
+30 mulr 3 4 4			e = e * pc				e = ( 27 * 28 + 29 ) * 30
+31 muli 4 14 4			e = e * 14				e = ( 27 * 28 + 29 ) * 30 * 14
+32 mulr 4 3 4			e = e * pc				e = ( 27 * 28 + 29 ) * 30 * 14 * 32
+33 addr 2 4 2			c = c + e				c = 882 + 10550400 = 10551282
+34 seti 0 7 0			a = 0					a = 0
+35 seti 0 9 3			pc = 0					goto L3
